@@ -59,7 +59,7 @@ exports.isUrlInList = function(url, callback) {
 
 exports.addUrlToList = function(url, callback) {
   // if (!exports.isUrlInList(url)) {
-  fs.appendFile(exports.paths.list, 'Wes is awesome', function(error) {
+  fs.appendFile(exports.paths.list, url, function(error) {
     if (error) {
       throw error;
     }

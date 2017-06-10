@@ -17,10 +17,37 @@ exports.sendResponse = function(response, statusCode) {
   response.end(data);
 };
 
-exports.serveAssets = function(res, asset, callback) {
+exports.requestData = function(request, response, callback) {
+  
+  var data = '';
+  request.on('data', function(chunk) {
+    data += chunk;
+  }).request.on('error', function(error) {
+    throw error;
+  }).request.on('end', function() {
+    callback(JSON.parse(data));
+  });
+};
+
+exports.serveAssets = function(response, asset, callback) {
   // Write some code here that helps serve up your static files!
   // (Static files are things like html (yours or archived from others...),
   // css, or anything that doesn't change often.)
+  // console.log('asset', asset);
+
+  //checking if the asset is found in the siteAssets (our local static files)
+  fs.readFile(archive.paths.siteAssets + '/' + asset, 'utf8', function(err, data) {
+    if (err) {
+      //checking if the asset is found in the archives
+      fs.readFile(archive.paths.archivedSites + '/' + asset, 'utf8', function(err, data) {
+        if (err) {
+          throw error;
+        }
+      });
+      return callback ? callback() : exports.sendResponse(response, 404);
+    }
+    exports.sendResponse(response, statusCode);
+  });
 };
 
 
